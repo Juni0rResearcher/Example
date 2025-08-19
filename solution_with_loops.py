@@ -1,5 +1,6 @@
 """
 Решение задачи о сравнении gcd(a1, a2, ..., an)! и gcd(a1!, a2!, ..., an!)
+с использованием циклов для всех операций
 
 Ключевое наблюдение: 
 - Для факториалов справедливо: если x ≤ y, то gcd(x!, y!) = x!
@@ -7,16 +8,25 @@
 - Условие выполняется ⟺ gcd(a1, a2, ..., an) = min(a1, a2, ..., an)
 """
 
-import math
+def gcd(a, b):
+    """Вычисление НОД двух чисел с помощью алгоритма Евклида"""
+    while b:
+        a, b = b, a % b
+    return a
 
 def solve():
     n = int(input())
-    a = list(map(int, input().split()))
+    a = []
+    
+    # Считываем массив с помощью цикла
+    line = input().split()
+    for i in range(n):
+        a.append(int(line[i]))
     
     # Находим НОД всех элементов массива с помощью цикла
     gcd_all = a[0]
     for i in range(1, n):
-        gcd_all = math.gcd(gcd_all, a[i])
+        gcd_all = gcd(gcd_all, a[i])
     
     # Находим минимальный элемент массива с помощью цикла
     min_element = a[0]
