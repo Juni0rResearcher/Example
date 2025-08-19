@@ -3,7 +3,8 @@
 def solve_hexagon_path(x, y):
     """
     Calculate minimum steps in directions A, B, C to reach (x, y) from (0, 0)
-    on a hexagonal grid where axes x and y are at 120° angle.
+    on a hexagonal grid where axes x and y are at 60° angle.
+    Movement vectors A, B, C are at 120° angles to each other.
     
     Using cube coordinates: z = -x - y
     Three directions A, B, C correspond to movements that change cube coordinates.
