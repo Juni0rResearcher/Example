@@ -28,49 +28,15 @@ def solve_hexagon_path(x, y):
     # The optimal solution uses the property that we can reach any point
     # using at most two of the three directions
     
-    # Case analysis based on which coordinates are non-negative:
-    if x >= 0 and y >= 0:
-        # z = -(x+y) <= 0
-        # Use directions A and B only
-        steps_A = x
-        steps_B = y  
-        steps_C = 0
-    elif x >= 0 and z >= 0:
-        # y = -(x+z) <= 0  
-        # Use directions A and C only
-        steps_A = x
-        steps_B = 0
-        steps_C = z
-    elif y >= 0 and z >= 0:
-        # x = -(y+z) <= 0
-        # Use directions B and C only  
-        steps_A = 0
-        steps_B = y
-        steps_C = z
-    elif x <= 0 and y <= 0:
-        # z = -(x+y) >= 0
-        # Use direction C only
-        steps_A = 0
-        steps_B = 0
-        steps_C = z
-    elif x <= 0 and z <= 0:
-        # y = -(x+z) >= 0
-        # Use direction B only
-        steps_A = 0  
-        steps_B = y
-        steps_C = 0
-    elif y <= 0 and z <= 0:
-        # x = -(y+z) >= 0
-        # Use direction A only
-        steps_A = x
-        steps_B = 0
-        steps_C = 0
-    else:
-        # This case should never occur due to constraint x + y + z = 0
-        # But handle it defensively
-        steps_A = max(0, x)
-        steps_B = max(0, y)
-        steps_C = max(0, z)
+    # Correct algorithm based on hexagonal grid theory:
+    # The key insight is that we need to find the optimal decomposition
+    # steps_A + steps_B + steps_C = max(|x|, |y|, |z|)
+    # where the net displacement equals (x, y, z)
+    
+    # The correct formula for hexagonal grids is:
+    steps_A = max(0, x, -z)
+    steps_B = max(0, y, -x) 
+    steps_C = max(0, z, -y)
     
     return steps_A, steps_B, steps_C
 
