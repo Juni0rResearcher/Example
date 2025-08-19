@@ -3,83 +3,81 @@
 def solve_hexagon_path(x, y):
     """
     Calculate minimum steps in directions A, B, C to reach (x, y) from (0, 0)
-    on a hexagonal grid.
+    on a hexagonal grid where axes x and y are at 120° angle.
     
-    Based on cube coordinates where z = -x - y.
+    Using cube coordinates: z = -x - y
+    Three directions A, B, C correspond to movements that change cube coordinates.
     
-    The key insight from hexagonal grid theory:
-    - In cube coordinates, we have three directions corresponding to three axes
-    - The minimum steps in each direction correspond to how we can decompose 
-      the target coordinate vector optimally
-    - We want non-negative steps only
+    The key insight: we need to find non-negative steps a, b, c such that:
+    - Total displacement equals (x, y, z) 
+    - Total steps = a + b + c is minimized
+    - This equals max(|x|, |y|, |z|)
     """
-    # Calculate z coordinate
+    # Calculate z coordinate  
     z = -x - y
     
-    # Based on the mathematical properties of hexagonal grids:
-    # The optimal path uses the fact that exactly two of {x, y, z} have the same sign
-    # and we can reach any point using combinations of the three directions
+    # The mathematical solution for hexagonal grids:
+    # We want to find non-negative a, b, c such that the net effect
+    # of a steps in direction A, b steps in direction B, c steps in direction C
+    # results in displacement (x, y, z)
     
-    # The solution is based on the insight that:
-    # steps_A = max(0, x, -z)  
-    # steps_B = max(0, y, -x)
-    # steps_C = max(0, z, -y)
-    # But we need to be more careful...
+    # Key insight: exactly two of {x, y, z} will have the same sign
+    # (or be zero), and we can use this to find optimal decomposition
     
-    # Actually, the correct approach is:
-    # We need to find the minimum non-negative steps in each direction
-    # such that the total displacement equals (x, y, z)
+    # The optimal solution uses the property that we can reach any point
+    # using at most two of the three directions
     
-    # From hexagonal grid theory, the solution is:
-    steps_A = max(0, x - min(0, y), -z - min(0, y))
-    steps_B = max(0, y - min(0, x), -x - min(0, z)) 
-    steps_C = max(0, z - min(0, x), -y - min(0, x))
-    
-    # Actually, let me use the simpler and more direct approach:
-    # Based on the cube coordinate system, the minimum steps are:
-    
+    # Case analysis based on which coordinates are non-negative:
     if x >= 0 and y >= 0:
-        # z <= 0, optimal path uses only A and B
+        # z = -(x+y) <= 0
+        # Use directions A and B only
         steps_A = x
-        steps_B = y
+        steps_B = y  
         steps_C = 0
+    elif x >= 0 and z >= 0:
+        # y = -(x+z) <= 0  
+        # Use directions A and C only
+        steps_A = x
+        steps_B = 0
+        steps_C = z
+    elif y >= 0 and z >= 0:
+        # x = -(y+z) <= 0
+        # Use directions B and C only  
+        steps_A = 0
+        steps_B = y
+        steps_C = z
     elif x <= 0 and y <= 0:
-        # z >= 0, optimal path uses only C  
+        # z = -(x+y) >= 0
+        # Use direction C only
         steps_A = 0
         steps_B = 0
         steps_C = z
-    elif x >= 0 and z >= 0:
-        # y <= 0, optimal path uses only A and C
-        steps_A = x
-        steps_B = 0  
-        steps_C = z
-    elif y >= 0 and z >= 0:
-        # x <= 0, optimal path uses only B and C
-        steps_A = 0
-        steps_B = y
-        steps_C = z
     elif x <= 0 and z <= 0:
-        # y >= 0, optimal path uses only B
-        steps_A = 0
+        # y = -(x+z) >= 0
+        # Use direction B only
+        steps_A = 0  
         steps_B = y
         steps_C = 0
     elif y <= 0 and z <= 0:
-        # x >= 0, optimal path uses only A
+        # x = -(y+z) >= 0
+        # Use direction A only
         steps_A = x
         steps_B = 0
         steps_C = 0
     else:
-        # This shouldn't happen in valid cube coordinates
-        # But just in case, use absolute values
-        steps_A = abs(x)
-        steps_B = abs(y) 
-        steps_C = abs(z)
+        # This case should never occur due to constraint x + y + z = 0
+        # But handle it defensively
+        steps_A = max(0, x)
+        steps_B = max(0, y)
+        steps_C = max(0, z)
     
     return steps_A, steps_B, steps_C
 
 def main():
+    # Read number of queries
     q = int(input())
     
+    # Process each coordinate pair
     for _ in range(q):
         x, y = map(int, input().split())
         steps_A, steps_B, steps_C = solve_hexagon_path(x, y)
